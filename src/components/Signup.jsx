@@ -5,35 +5,11 @@ import './styles/Signup.css';
 export default function Signup({ role }) {
   const [formData, setFormData] = useState({
     email: '', password: '', name: '', phone: '',
-    birthdate: '', idNumber: '', departamento: '', city: '', role: role
+    birthdate: '', idNumber: '', city: '', role: role
   });
-  const [departamentos, setDepartamentos] = useState([]);
-  const [ciudades, setCiudades] = useState([]);
-  const [selectedDepartamento, setSelectedDepartamento] = useState('');
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Obtén la lista de departamentos del backend
-    const fetchDepartamentos = async () => {
-      try {
-        const response = await fetch('https://promocion-back.vercel.app/user/departamentos');
-        const data = await response.json();
-        setDepartamentos(data);
-      } catch (error) {
-        alert('Error al obtener departamentos');
-      }
-    };
-    fetchDepartamentos();
-  }, []);
-  const handleDepartamentoChange = (e) => {
-    const departamentoSeleccionado = e.target.value;
-    setSelectedDepartamento(departamentoSeleccionado);
-
-    // Filtrar las ciudades basadas en el departamento seleccionado
-    const departamento = departamentos.find(dep => dep.departamento === departamentoSeleccionado);
-    setCiudades(departamento ? departamento.ciudades : []);
-    setFormData({ ...formData, departamento: departamentoSeleccionado, city: '' }); // Limpiar el campo de ciudad
-  };
 
 
   const handleChange = (e) => {
@@ -53,7 +29,7 @@ export default function Signup({ role }) {
     }
 
         try {
-            const response = await fetch('https://promocion-back.vercel.app/user/signup', {
+            const response = await fetch('https://parcial2back-gamma.vercel.app/user/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,23 +84,11 @@ export default function Signup({ role }) {
             <input type="number" name="idNumber" id="idNumber" required placeholder="Cédula" value={formData.idNumber} onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label id="labelSignup" htmlFor="departamento">Departamento</label>
-            <select name="departamento" id="departamento" required onChange={handleDepartamentoChange}>
-              <option value="">Selecciona un departamento</option>
-              {departamentos.map((dpto) => (
-                <option key={dpto.id} value={dpto.departamento}>{dpto.departamento}</option>
-              ))}
-            </select>
-          </div>
+        
           <div className="form-group">
             <label id="labelSignup" htmlFor="city">Ciudad</label>
-            <select name="city" id="city" required onChange={handleChange} value={formData.city}>
-              <option value="">Selecciona una ciudad</option>
-              {ciudades.map((ciudad, index) => (
-                <option key={index} value={ciudad}>{ciudad}</option>
-              ))}
-            </select>
+            <input type="text" name="city" id="city" required placeholder="Ciudad" value={formData.city} onChange={handleChange}
+            />
           </div>
           <button type="submit" className="submit-button">
             Registrarse
